@@ -39,22 +39,37 @@ def google_fetch(search, start=0):
 			title = h3.find("div").text
 			a = h3.parent
 			href = a.get("href")
-			sub_title = h3.nextSibling.text
-			desciption = a.parent.nextSibling.nextSibling
-			for i in range(0, 5):
-				try:
-					child = desciption.find("div")
-					if child:
-						desciption = desciption.find("div")
-					else:
-						break
-				except:
-					pass
+			
+			if not href:
+				continue
+			
+			try:
+				sub_title = h3.nextSibling.text
+			except:
+				sub_title = ""
+	
+			try:
+				desciption = a.parent.nextSibling.nextSibling
+
+				for i in range(0, 5):
+					try:
+						child = desciption.find("div")
+						if child:
+							desciption = desciption.find("div")
+						else:
+							break
+					except:
+						pass
+
+				desciption = desciption.text
+			except:
+				desciption = ""
+
 
 			e["title"]		= title
 			e["sub_title"]	= sub_title
 			e["link"]		= urllib.parse.unquote(href[len("/url?q="):href.index("&")])
-			e["desciption"]	= desciption.text
+			e["desciption"]	= desciption
 			
 			format(e, "\033[0;4;31mG\033[0m")
 		
